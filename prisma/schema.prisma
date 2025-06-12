@@ -58,8 +58,8 @@ model News {
   imageUrl    String
   publishedAt DateTime @default(now())
   author      String
-  sourceUrl   String?
-  source      String?
+  sourceUrl   String
+  source      String
   category    String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

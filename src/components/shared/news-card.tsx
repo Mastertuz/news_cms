@@ -1,34 +1,62 @@
 "use client";
 
 import Image from "next/image";
-import {  Calendar, ExternalLink, Heart, User } from "lucide-react";
+import { Calendar, ExternalLink, User } from "lucide-react";
 
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { Badge } from "../ui/badge";
-export function NewsCard() {
-  const obj = {
-    title: "Заголовок новости",
-    summary:
-      "Краткое описание новости, которое должно быть достаточно информативным, но не слишком длинным.",
-    imageUrl: "https://cdnn21.img.ria.ru/images/07e9/04/1c/2013784766_0:321:3072:2048_768x0_80_0_0_a86a9e32ba03335b4e7bd2c07df6901c.jpg.webp",
-    author: "Олег Иванов",
-    publishedAt: "2025-06-01",
-    category: "Политика",
-    source: 'Tass.ru'
+import { Badge } from "@/components/ui/badge";
+import type { NewsItem } from "../../../types";
+import Link from "next/link";
+
+interface NewsCardProps {
+  newsItem: NewsItem;
+}
+
+export function NewsCard({ newsItem }: NewsCardProps) {
+  const {
+    title,
+    summary,
+    imageUrl,
+    publishedAt,
+    author,
+    category,
+    source,
+    sourceUrl,
+  } = newsItem;
+
+  const formatDate = (date: Date | string | null | undefined) => {
+    if (!date) return "Дата не указана";
+
+    try {
+      const dateObj = typeof date === "string" ? new Date(date) : date;
+      if (isNaN(dateObj.getTime())) {
+        return "Неверная дата";
+      }
+
+      return new Intl.DateTimeFormat("ru-RU", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }).format(dateObj);
+    } catch (error) {
+      console.error("Ошибка форматирования даты:", error);
+      return "Ошибка даты";
+    }
   };
 
-  const { title, summary, imageUrl, publishedAt, author,category,source } = obj;
-
-  const liked = false;
   return (
-    <Card className="hover:shadow-lg shadow-gray-500 transition-all duration-200 group p-0 ">
-      
+    <Card className="hover:shadow-lg shadow-gray-500 transition-all duration-200 group p-0">
       <div className="aspect-video overflow-hidden rounded-t-lg relative">
         <Image
-          src={imageUrl}
-          alt={title}
+          src={imageUrl || "/placeholder.svg?height=200&width=300"}
+          alt={title || "Изображение новости"}
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-200"
           priority
@@ -37,19 +65,17 @@ export function NewsCard() {
       </div>
 
       <CardHeader>
-         <div className="flex items-start justify-between gap-2">
-          <CardTitle
-            className={`text-lg line-clamp-2 leading-tight  `}
-          >
-            {title}
+        <div className="flex items-start justify-between gap-2">
+          <CardTitle className="text-lg line-clamp-2 leading-tight">
+            {title || "Заголовок не указан"}
           </CardTitle>
-          <Badge variant="secondary" className={`shrink-0`}>
-            {category}
+          <Badge variant="secondary" className="shrink-0">
+            {category || "Без категории"}
           </Badge>
         </div>
-        <CardDescription className="text-sm text-white flex items-center gap-2">
-          <span>{source}</span>
-          {author  && (
+        <CardDescription className="text-sm text-muted-foreground flex items-center gap-2">
+          <span>{source || "Источник не указан"}</span>
+          {author && (
             <>
               <span>•</span>
               <span className="flex items-center gap-1">
@@ -60,24 +86,39 @@ export function NewsCard() {
           )}
         </CardDescription>
       </CardHeader>
-     <CardContent className="pb-4">
-        <p className=" mb-4 line-clamp-3">{summary}</p>
+
+      <CardContent className="pb-4">
+        <p className="mb-4 line-clamp-3">{summary || "Описание не указано"}</p>
         <div className="flex items-center justify-between">
-          <div className="flex items-center text-sm ">
+          <div className="flex items-center text-sm">
             <Calendar className="w-4 h-4 mr-1" />
-            {publishedAt}
+            {formatDate(publishedAt)}
           </div>
-          <Button
-            variant={"outline"}
-            size="sm"
-            className="flex items-center gap-1 cursor-pointer"
-          >
-            { "Читать"}
-           <ExternalLink className="w-3 h-3" />
-          </Button>
+          {sourceUrl ? (
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-1 cursor-pointer"
+              asChild
+            >
+              <Link href={sourceUrl} target="_blank" rel="noopener noreferrer">
+                Читать
+                <ExternalLink className="w-3 h-3" />
+              </Link>
+            </Button>
+          ) : (
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-1"
+              disabled
+            >
+              Читать
+              <ExternalLink className="w-3 h-3" />
+            </Button>
+          )}
         </div>
       </CardContent>
-     
     </Card>
   );
 }
