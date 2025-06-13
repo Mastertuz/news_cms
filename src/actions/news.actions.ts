@@ -42,7 +42,6 @@ export const getNewsByTitle = async (query: string) => {
   return news
 }
 
-// Новая функция для поиска по категории
 export const getNewsByCategory = async (category: string) => {
   const news = await prisma.news.findMany({
     where: {
@@ -56,7 +55,6 @@ export const getNewsByCategory = async (category: string) => {
   return news
 }
 
-// Новая функция для поиска по категории и ключевому слову
 export const getNewsByCategoryAndKeyword = async (category: string, keyword: string) => {
   const news = await prisma.news.findMany({
     where: {
@@ -90,7 +88,6 @@ export const getNewsByCategoryAndKeyword = async (category: string, keyword: str
   return news
 }
 
-// Универсальная функция для фильтрации новостей
 export const getFilteredNews = async (filters: {
   categories?: string[]
   authors?: string[]
@@ -102,7 +99,6 @@ export const getFilteredNews = async (filters: {
     AND: [],
   }
 
-  // Фильтр по категориям
   if (categories && categories.length > 0) {
     whereConditions.AND.push({
       category: {
@@ -112,7 +108,6 @@ export const getFilteredNews = async (filters: {
     })
   }
 
-  // Фильтр по авторам
   if (authors && authors.length > 0) {
     whereConditions.AND.push({
       author: {
@@ -122,7 +117,6 @@ export const getFilteredNews = async (filters: {
     })
   }
 
-  // Фильтр по ключевому слову
   if (keyword) {
     whereConditions.AND.push({
       OR: [
@@ -142,7 +136,6 @@ export const getFilteredNews = async (filters: {
     })
   }
 
-  // Если нет условий, возвращаем все новости
   const finalWhere = whereConditions.AND.length > 0 ? whereConditions : {}
 
   const news = await prisma.news.findMany({
@@ -181,7 +174,6 @@ export const getAllNews = async () => {
   })
 }
 
-// Функция для получения всех уникальных категорий
 export const getAllCategories = async () => {
   const categories = await prisma.news.findMany({
     select: {
@@ -192,8 +184,6 @@ export const getAllCategories = async () => {
 
   return categories.map((item) => item.category).filter(Boolean)
 }
-
-// Функция для получения всех уникальных авторов
 export const getAllAuthors = async () => {
   const authors = await prisma.news.findMany({
     select: {

@@ -15,10 +15,8 @@ export async function NewsFilterServer({
   showSearch = true,
   searchParams = {},
 }: NewsFilterServerProps) {
-  // Загружаем данные на сервере
   const [categories, authors] = await Promise.all([getAllCategories(), getAllAuthors()])
 
-  // Получаем текущие фильтры из URL
   const currentCategories = searchParams.categories?.split(",").filter(Boolean) || []
   const currentAuthors = searchParams.authors?.split(",").filter(Boolean) || []
 

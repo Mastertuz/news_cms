@@ -20,7 +20,7 @@ model User {
   role          String      @default("user")
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
-  favorites     Favorite[]  // Добавляем связь с избранными новостями
+  favorites     Favorite[]  
 }
 
 model Account {
@@ -65,14 +65,13 @@ model News {
   category    String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  favorites   Favorite[] // Добавляем связь с избранным
+  favorites   Favorite[] 
 
   @@index([category])
   @@index([author])
   @@index([createdAt])
 }
 
-// Новая модель для избранных новостей
 model Favorite {
   id        String   @id @default(cuid())
   userId    String
@@ -82,7 +81,7 @@ model Favorite {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   news      News     @relation(fields: [newsId], references: [id], onDelete: Cascade)
   
-  @@unique([userId, newsId]) // Уникальный индекс для предотвращения дублирования
+  @@unique([userId, newsId]) 
   @@index([userId])
   @@index([newsId])
 }

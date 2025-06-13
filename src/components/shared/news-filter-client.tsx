@@ -55,15 +55,12 @@ export function NewsFilterClient({
   categories,
   authors,
   currentQuery,
-  showSearch,
   currentCategories,
   currentAuthors,
 }: NewsFilterClientProps) {
   const searchParams = useSearchParams()
   const router = useRouter()
   const pathname = usePathname()
-
-  // Search form
   const searchForm = useForm<SearchFormValues>({
     resolver: zodResolver(searchFormSchema),
     defaultValues: {
@@ -75,14 +72,12 @@ export function NewsFilterClient({
     (categories: string[], authors: string[]) => {
       const newSearchParams = new URLSearchParams()
 
-      // Сохраняем другие параметры, если они есть
       searchParams.forEach((value, key) => {
         if (key !== "categories" && key !== "authors") {
           newSearchParams.set(key, value)
         }
       })
 
-      // Добавляем новые фильтры
       if (categories.length > 0) {
         newSearchParams.set("categories", categories.join(","))
       }
@@ -171,7 +166,6 @@ export function NewsFilterClient({
     <div className="mb-6">
       <Card>
         <CardContent className="p-4 md:p-6">
-          {/* Search Form */}
           <Form {...searchForm}>
             <form onSubmit={searchForm.handleSubmit(onSearchSubmit)} className="space-y-4">
               <div className="flex flex-col md:flex-row gap-2">
@@ -198,7 +192,6 @@ export function NewsFilterClient({
                     {searchForm.watch("input") ? "Поиск" : "Применить"}
                   </Button>
 
-                  {/* Desktop Dropdown Menu */}
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="outline" size="lg" className="h-12 relative hidden md:flex" type="button">
@@ -352,7 +345,6 @@ export function NewsFilterClient({
                 </div>
               </div>
 
-              {/* Active Filters Display - фиксированная высота для предотвращения прыжков */}
               <div className="h-8 flex items-center">
                 {hasActiveFilters && (
                   <div className="flex flex-wrap gap-2 w-full">

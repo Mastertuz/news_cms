@@ -49,7 +49,9 @@ function NewsGrid({ news, query, variant = "home", className, isAdmin = false }:
             <div>Всего новостей: {news.length}</div>
           )}
         </div>
+        {isAdmin&& (
       <AddNewsDialog/>
+        )}
 
         {/* Дополнительная информация для страницы поиска */}
         {query && (

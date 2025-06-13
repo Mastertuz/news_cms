@@ -94,7 +94,7 @@ export function EditNewsDialog({ newsItem, trigger }: EditNewsItemDialogProps) {
 
     try {
       await updateNewsItem(newsItem.id, { ...data, imageUrl })
-      setOpen(false) // Закрываем диалог после успешного обновления
+      setOpen(false) 
       form.reset()
     } catch (err) {
       console.error("Ошибка при обновлении новости:", err)

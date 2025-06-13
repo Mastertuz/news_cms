@@ -48,7 +48,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
   // Проверка роли пользователя на уровне страницы
   const user = await getCurrentUser()
-  const isAdmin = user?.role === "user"
+  const isAdmin = user?.role === "admin"
 
   return (
     <main className="container mx-auto py-6 px-4">
