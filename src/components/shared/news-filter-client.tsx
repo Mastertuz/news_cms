@@ -1,5 +1,7 @@
 "use client"
 
+import type React from "react"
+
 import { useSearchParams, useRouter, usePathname } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -152,9 +154,16 @@ export function NewsFilterClient({
     [currentCategories, currentAuthors, updateURL],
   )
 
-  const clearAllFilters = useCallback(() => {
-    updateURL([], [])
-  }, [updateURL])
+  const clearAllFilters = useCallback(
+    (e?: React.MouseEvent) => {
+      if (e) {
+        e.preventDefault()
+        e.stopPropagation()
+      }
+      updateURL([], [])
+    },
+    [updateURL],
+  )
 
   const hasActiveFilters = currentCategories.length > 0 || currentAuthors.length > 0
 
@@ -192,7 +201,7 @@ export function NewsFilterClient({
                   {/* Desktop Dropdown Menu */}
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="outline" size="lg" className="h-12 relative hidden md:flex">
+                      <Button variant="outline" size="lg" className="h-12 relative hidden md:flex" type="button">
                         <Filter className="mr-2 h-4 w-4" />
                         Фильтры
                         {hasActiveFilters && (
@@ -279,7 +288,7 @@ export function NewsFilterClient({
                   {/* Mobile Sheet */}
                   <Sheet>
                     <SheetTrigger asChild>
-                      <Button variant="outline" size="lg" className="h-12 relative md:hidden">
+                      <Button variant="outline" size="lg" className="h-12 relative md:hidden" type="button">
                         <Filter className="mr-2 h-4 w-4" />
                         Фильтры
                         {hasActiveFilters && (
@@ -334,7 +343,7 @@ export function NewsFilterClient({
                         </div>
                       </div>
                       <SheetFooter className="flex-col sm:flex-row gap-2">
-                        <Button variant="outline" onClick={clearAllFilters}>
+                        <Button variant="outline" onClick={clearAllFilters} type="button">
                           Очистить
                         </Button>
                       </SheetFooter>
@@ -373,7 +382,13 @@ export function NewsFilterClient({
                         </button>
                       </Badge>
                     ))}
-                    <Button variant="ghost" size="sm" onClick={clearAllFilters} className="h-6 px-2 text-xs">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={clearAllFilters}
+                      className="h-6 px-2 text-xs"
+                      type="button"
+                    >
                       Очистить все
                     </Button>
                   </div>

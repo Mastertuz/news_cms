@@ -1,5 +1,7 @@
 "use client"
 
+import type React from "react"
+
 import {
   Dialog,
   DialogContent,
@@ -37,13 +39,24 @@ type NewsItemFormData = z.infer<typeof newsItemSchema>
 
 interface EditNewsItemDialogProps {
   newsItem: NewsItem
+  trigger?: React.ReactNode
 }
 
-export function EditNewsDialog({ newsItem }: EditNewsItemDialogProps) {
+export function EditNewsDialog({ newsItem, trigger }: EditNewsItemDialogProps) {
   const [open, setOpen] = useState(false)
   const [imageUrl, setImageUrl] = useState(newsItem.imageUrl || "")
 
-  const categories = ["Технологии", "Медицина", "Экология", "Спорт", "Политика", "Экономика", "Культура", "Наука",'Происшествия']
+  const categories = [
+    "Технологии",
+    "Медицина",
+    "Экология",
+    "Спорт",
+    "Политика",
+    "Экономика",
+    "Культура",
+    "Наука",
+    "Происшествия",
+  ]
 
   const form = useForm<NewsItemFormData>({
     resolver: zodResolver(newsItemSchema),
@@ -101,9 +114,12 @@ export function EditNewsDialog({ newsItem }: EditNewsItemDialogProps) {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
-          <Edit className="h-4 w-4" />
-        </Button>
+        {trigger || (
+          <Button variant="outline" size="sm">
+            <Edit className="h-4 w-4 mr-2" />
+            Редактировать
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>

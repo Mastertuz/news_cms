@@ -1,4 +1,5 @@
-import { NewsItem } from "../../../types"
+import type { NewsItem } from "../../../types"
+import AddNewsDialog from "./add-news-form"
 import { NewsCard } from "./news-card"
 import { cn } from "@/lib/utils"
 
@@ -7,9 +8,10 @@ interface NewsGridProps {
   query?: string
   variant?: "home" | "search" | "compact"
   className?: string
+  isAdmin?: boolean
 }
 
-function NewsGrid({ news, query, variant = "home", className }: NewsGridProps) {
+function NewsGrid({ news, query, variant = "home", className, isAdmin = false }: NewsGridProps) {
   if (news.length === 0) {
     return (
       <div className="text-center py-12">
@@ -47,6 +49,7 @@ function NewsGrid({ news, query, variant = "home", className }: NewsGridProps) {
             <div>Всего новостей: {news.length}</div>
           )}
         </div>
+      <AddNewsDialog/>
 
         {/* Дополнительная информация для страницы поиска */}
         {query && (
@@ -59,7 +62,7 @@ function NewsGrid({ news, query, variant = "home", className }: NewsGridProps) {
       {/* Сетка новостей */}
       <div className={cn(gridClasses[displayVariant], className)}>
         {news.map((item) => (
-          <NewsCard key={item.id} newsItem={item} />
+          <NewsCard key={item.id} newsItem={item} isAdmin={isAdmin} />
         ))}
       </div>
     </div>
