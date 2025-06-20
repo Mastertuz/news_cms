@@ -1,10 +1,9 @@
 import { getFilteredNews } from "@/actions/news.actions"
 import { NewsFilterServer } from "@/components/shared/news-filter-server"
 import Newsgrid from "@/components/shared/news-grid"
-import { Suspense } from "react"
-import { Spinner } from "@/components/shared/spinner"
 import { getCurrentUser } from "@/lib/auth"
-import AddNewsDialog from "@/components/shared/add-news-form"
+import { getUserFavorites } from "@/actions/favorites.actions"
+import { redirect } from "next/navigation"
 
 interface HomeProps {
   searchParams: Promise<{
@@ -13,49 +12,43 @@ interface HomeProps {
   }>
 }
 
-function NewsGridLoading() {
-  return (
-    <div className="flex items-center justify-center py-12">
-      <div className="flex flex-col items-center gap-4">
-        <Spinner size="lg" />
-        <p className="text-muted-foreground">Загрузка новостей...</p>
-      </div>
-    </div>
-  )
-}
-
 async function NewsContent({
   categories,
   authors,
   isAdmin,
+  userId,
 }: {
   categories?: string[]
   authors?: string[]
   isAdmin: boolean
+  userId?: string
 }) {
   const news = await getFilteredNews({
     categories,
     authors,
   })
 
-  return <Newsgrid news={news} isAdmin={isAdmin} />
+  let favoriteIds: string[] = []
+  if (userId) {
+    const favorites = await getUserFavorites()
+    favoriteIds = favorites.map((n) => n.id)
+  }
+
+  return <Newsgrid news={news} isAdmin={isAdmin} favoriteIds={favoriteIds} />
 }
 
 export default async function Home({ searchParams }: HomeProps) {
   const params = await searchParams
   const categories = params.categories?.split(",").filter(Boolean)
   const authors = params.authors?.split(",").filter(Boolean)
-
-  // Проверка роли пользователя на уровне страницы
   const user = await getCurrentUser()
   const isAdmin = user?.role === "admin"
-
+  const userId = user?.id
+  if (!user) redirect("/sign-in") 
   return (
     <main className="container mx-auto py-6 px-4">
       <NewsFilterServer searchParams={params} />
-      <Suspense fallback={<NewsGridLoading />}>
-        <NewsContent categories={categories} authors={authors} isAdmin={isAdmin} />
-      </Suspense>
+      <NewsContent categories={categories} authors={authors} isAdmin={isAdmin} userId={userId} />
     </main>
   )
 }

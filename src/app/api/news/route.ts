@@ -5,12 +5,10 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url)
 
-    // Получаем параметры фильтрации из URL
     const categories = searchParams.get("categories")?.split(",").filter(Boolean)
     const authors = searchParams.get("authors")?.split(",").filter(Boolean)
     const keyword = searchParams.get("keyword") || undefined
 
-    // Используем новую функцию фильтрации
     const news = await getFilteredNews({
       categories,
       authors,

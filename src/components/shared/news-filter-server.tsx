@@ -12,7 +12,6 @@ interface NewsFilterServerProps {
 
 export async function NewsFilterServer({
   currentQuery = "",
-  showSearch = true,
   searchParams = {},
 }: NewsFilterServerProps) {
   const [categories, authors] = await Promise.all([getAllCategories(), getAllAuthors()])
@@ -25,7 +24,6 @@ export async function NewsFilterServer({
       categories={categories}
       authors={authors}
       currentQuery={currentQuery}
-      showSearch={showSearch}
       currentCategories={currentCategories}
       currentAuthors={currentAuthors}
     />

@@ -1,17 +1,11 @@
-import { Suspense } from "react"
 import { NewsFilterServer } from "@/components/shared/news-filter-server"
 import NewsGrid from "@/components/shared/news-grid"
 import { NewsItem } from "../../../../types"
 import { getNewsByTitle } from "@/actions/news.actions"
-import { Spinner } from "@/components/shared/spinner"
+
 interface SearchPageProps {
-  params: {
-    query: string
-  }
-  searchParams: {
-    categories?: string
-    authors?: string
-  }
+  params: Promise<{ query: string }>
+  searchParams: Promise<{ categories?: string; authors?: string }>
 }
 
 async function getFilteredNews(query: string, categories?: string[], authors?: string[]): Promise<NewsItem[]> {
@@ -29,32 +23,15 @@ async function getFilteredNews(query: string, categories?: string[], authors?: s
   return news
 }
 
-function SearchResultsLoading() {
-  return (
-    <div className="flex items-center justify-center py-12">
-      <div className="flex flex-col items-center gap-4">
-        <Spinner size="lg" />
-        <p className="text-muted-foreground">Поиск новостей...</p>
-      </div>
-    </div>
-  )
-}
-
-async function SearchResults({ params, searchParams }: SearchPageProps) {
-  const { query } = params
-  const { categories, authors } = searchParams
+export default async function SearchPage({ params, searchParams }: SearchPageProps) {
+  const { query } = await params
+  const { categories, authors } = await searchParams
 
   const categoryList = categories?.split(",").filter(Boolean)
   const authorList = authors?.split(",").filter(Boolean)
 
   const news = await getFilteredNews(query, categoryList, authorList)
   const decodedQuery = decodeURIComponent(query)
-
-  return <NewsGrid news={news} query={decodedQuery} variant="search" />
-}
-
-export default function SearchPage({ params, searchParams }: SearchPageProps) {
-  const decodedQuery = decodeURIComponent(params.query)
 
   return (
     <div className="container mx-auto px-4 py-6">
@@ -63,17 +40,16 @@ export default function SearchPage({ params, searchParams }: SearchPageProps) {
         <p className="text-muted-foreground">Найдите интересующие вас новости по ключевым словам</p>
       </div>
 
-      <NewsFilterServer currentQuery={decodedQuery} searchParams={searchParams} />
+      <NewsFilterServer currentQuery={decodedQuery} searchParams={{ categories, authors }} />
 
-      <Suspense fallback={<SearchResultsLoading />}>
-        <SearchResults params={params} searchParams={searchParams} />
-      </Suspense>
+      <NewsGrid news={news} query={decodedQuery} variant="search" />
     </div>
   )
 }
 
-export async function generateMetadata({ params }: { params: { query: string } }) {
-  const decodedQuery = decodeURIComponent(params.query)
+export async function generateMetadata({ params }: { params: Promise<{ query: string }> }) {
+  const { query } = await params
+  const decodedQuery = decodeURIComponent(query)
 
   return {
     title: `Поиск: ${decodedQuery} | Новости`,

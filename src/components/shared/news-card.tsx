@@ -2,13 +2,10 @@
 
 import Image from "next/image"
 import { Calendar, ExternalLink, User, Edit } from "lucide-react"
-import React from "react"
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
-import { isNewsFavorite } from "@/actions/favorites.actions"
 import { FavoriteButton } from "./add-to-favorite-button"
 import type { NewsItem } from "../../../types"
 import { EditNewsDialog } from "./edit-news-form"
@@ -17,53 +14,25 @@ import { DeleteNewsButton } from "./remove-news-button"
 interface NewsCardProps {
   newsItem: NewsItem
   isAdmin?: boolean
+  isFavorite?: boolean
 }
 
-export function NewsCard({ newsItem, isAdmin = false }: NewsCardProps) {
+export function NewsCard({ newsItem, isAdmin = false, isFavorite = false }: NewsCardProps) {
   const { id, title, summary, imageUrl, publishedAt, author, category, source, sourceUrl } = newsItem
-  const [favoriteStatus, setFavoriteStatus] = React.useState(false)
-  const [isLoading, setIsLoading] = React.useState(true)
-
-  // Проверяем статус избранного
-  React.useEffect(() => {
-    const checkFavoriteStatus = async () => {
-      try {
-        setIsLoading(true)
-        const status = await isNewsFavorite(id)
-        setFavoriteStatus(status)
-      } catch (error) {
-        console.error("Ошибка при проверке статуса избранного:", error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    checkFavoriteStatus()
-  }, [id])
 
   const formatDate = (date: Date | string | null | undefined) => {
     if (!date) return "Дата не указана"
-
     try {
       const dateObj = typeof date === "string" ? new Date(date) : date
-      if (isNaN(dateObj.getTime())) {
-        return "Неверная дата"
-      }
-
+      if (isNaN(dateObj.getTime())) return "Неверная дата"
       return new Intl.DateTimeFormat("ru-RU", {
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
       }).format(dateObj)
-    } catch (error) {
-      console.error("Ошибка форматирования даты:", error)
+    } catch {
       return "Ошибка даты"
     }
-  }
-
-  // Функция для обновления статуса избранного
-  const updateFavoriteStatus = (newStatus: boolean) => {
-    setFavoriteStatus(newStatus)
   }
 
   return (
@@ -110,10 +79,9 @@ export function NewsCard({ newsItem, isAdmin = false }: NewsCardProps) {
           <div className="flex items-center gap-2">
             <FavoriteButton
               newsId={id}
-              initialIsFavorite={favoriteStatus}
+              initialIsFavorite={isFavorite}
               variant="ghost"
               size="sm"
-              onStatusChange={updateFavoriteStatus}
             />
             {sourceUrl ? (
               <Button variant="outline" size="sm" className="flex items-center gap-1 cursor-pointer" asChild>
@@ -132,7 +100,6 @@ export function NewsCard({ newsItem, isAdmin = false }: NewsCardProps) {
         </div>
       </CardContent>
 
-      {/* Кнопки администратора на всю ширину внизу карточки */}
       {isAdmin && (
         <CardFooter className="flex flex-col gap-2 p-4 pt-0">
           <EditNewsDialog
