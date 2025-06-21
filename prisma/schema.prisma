@@ -9,18 +9,23 @@ datasource db {
 }
 
 model User {
-  id            String      @id @default(cuid())
-  name          String?
-  email         String      @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  password      String      
-  role          String      @default("user")
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  favorites     Favorite[]  
+  id                   String            @id @default(cuid())
+  name                 String?
+  email                String            @unique
+  emailVerified        DateTime?
+  image                String?
+  accounts             Account[]
+  sessions             Session[]
+  password             String
+  role                 String            @default("user")
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+  favorites            Favorite[]
+  subscriptionActive   Boolean           @default(false)
+  subscriptionExpires  DateTime?
+  subscriptionOrders   SubscriptionOrder[]
+
+  @@index([email])
 }
 
 model Account {
@@ -35,13 +40,12 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
@@ -49,23 +53,25 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model News {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   title       String
-  summary     String   @db.Text
+  summary     String    @db.Text
   imageUrl    String
-  publishedAt DateTime @default(now())
+  publishedAt DateTime  @default(now())
   author      String
   sourceUrl   String
   source      String
   category    String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  favorites   Favorite[] 
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  favorites   Favorite[]
 
   @@index([category])
   @@index([author])
@@ -77,11 +83,23 @@ model Favorite {
   userId    String
   newsId    String
   createdAt DateTime @default(now())
-  
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   news      News     @relation(fields: [newsId], references: [id], onDelete: Cascade)
-  
-  @@unique([userId, newsId]) 
+
+  @@unique([userId, newsId])
   @@index([userId])
   @@index([newsId])
+}
+
+model SubscriptionOrder {
+  id               String   @id @default(cuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount           Float
+  status           String   @default("pending")
+  subscriptionType String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([userId])
 }
