@@ -2,7 +2,6 @@ import { type NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { getCurrentUser } from "@/lib/auth"
 
-// Проверить, находится ли новость в избранном
 export async function GET(req: NextRequest) {
   try {
     const user = await getCurrentUser()

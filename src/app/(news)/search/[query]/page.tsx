@@ -1,6 +1,6 @@
 import { NewsFilterServer } from "@/components/shared/news-filter-server"
 import NewsGrid from "@/components/shared/news-grid"
-import { NewsItem } from "../../../../types"
+import { NewsItem } from "../../../../../types"
 import { getNewsByTitle } from "@/actions/news.actions"
 
 interface SearchPageProps {

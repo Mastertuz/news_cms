@@ -191,7 +191,6 @@ export function NewsFilterClient({
                     {form.watch("input") ? "Поиск" : "Применить"}
                   </Button>
 
-                  {/* Desktop Filters */}
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button
@@ -276,7 +275,6 @@ export function NewsFilterClient({
                     </DropdownMenuContent>
                   </DropdownMenu>
 
-                  {/* Mobile Sheet Filters */}
                   <Sheet>
                     <SheetTrigger asChild>
                       <Button
@@ -295,7 +293,6 @@ export function NewsFilterClient({
                         </SheetDescription>
                       </SheetHeader>
 
-                      {/* Категории */}
                       <div className="space-y-4">
                         <h3 className="text-base font-semibold">Категории</h3>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -322,10 +319,8 @@ export function NewsFilterClient({
                         </div>
                       </div>
 
-                      {/* Разделитель */}
                       <Separator />
 
-                      {/* Авторы */}
                       <div className="space-y-4">
                         <h3 className="text-base font-semibold">Авторы</h3>
                         <div className="space-y-3 max-h-64 overflow-y-auto pr-2">
@@ -366,7 +361,6 @@ export function NewsFilterClient({
                 </div>
               </div>
 
-              {/* Filter tags */}
               {hasActiveFilters && (
                 <div className="flex flex-wrap gap-2 overflow-x-auto max-w-full">
                   {currentCategories.map((cat) => (

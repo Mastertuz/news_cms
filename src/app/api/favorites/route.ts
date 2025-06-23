@@ -2,7 +2,6 @@ import { type NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { getCurrentUser } from "@/lib/auth"
 
-// Получить все избранные новости пользователя
 export async function GET(req: NextRequest) {
   try {
     const user = await getCurrentUser()
@@ -30,7 +29,6 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// Добавить новость в избранное
 export async function POST(req: NextRequest) {
   try {
     const user = await getCurrentUser()
@@ -45,7 +43,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "News ID is required" }, { status: 400 })
     }
 
-    // Проверяем, существует ли новость
     const news = await prisma.news.findUnique({
       where: { id: newsId },
     })
@@ -54,7 +51,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "News not found" }, { status: 404 })
     }
 
-    // Проверяем, есть ли уже эта новость в избранном
     const existingFavorite = await prisma.favorite.findUnique({
       where: {
         userId_newsId: {
@@ -68,7 +64,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: "Already in favorites" })
     }
 
-    // Добавляем в избранное
     const favorite = await prisma.favorite.create({
       data: {
         userId: user.id,
@@ -83,7 +78,6 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// Удалить новость из избранного
 export async function DELETE(req: NextRequest) {
   try {
     const user = await getCurrentUser()
@@ -99,7 +93,6 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: "News ID is required" }, { status: 400 })
     }
 
-    // Удаляем из избранного
     await prisma.favorite.delete({
       where: {
         userId_newsId: {

@@ -130,7 +130,7 @@ export default function AddNewsDialog() {
               )}
             />
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4 max-sm:flex max-sm:flex-col">
               <FormField
                 control={form.control}
                 name="author"
@@ -149,17 +149,17 @@ export default function AddNewsDialog() {
                 control={form.control}
                 name="category"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem >
                     <FormLabel>Категория *</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
+                      <FormControl className="w-full">
                         <SelectTrigger>
                           <SelectValue placeholder="Выберите категорию" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
                         {categories.map((category) => (
-                          <SelectItem key={category} value={category}>
+                          <SelectItem  key={category} value={category}>
                             {category}
                           </SelectItem>
                         ))}

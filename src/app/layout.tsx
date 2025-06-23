@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Header } from "@/components/shared/header";
 import { Toaster } from "sonner";
 
 
@@ -20,10 +19,9 @@ export default function RootLayout({
         cz-shortcut-listen="true"
       >
         <main>
-        <Header/>
         {children}
-        </main>
         <Toaster/>
+        </main>
       </body>
     </html>
   );

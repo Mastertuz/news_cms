@@ -1,5 +1,4 @@
-
-import { auth } from "../../../auth"
+import { auth } from "../../../../auth"
 import { getUserInfo } from "@/actions/user.actions"
 import ProfileClient from "@/components/shared/profile-client"
 export const metadata = {
