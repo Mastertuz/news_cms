@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
     const subscriptionPrice = subscriptionType === "monthly" ? 499 : 4999;
     const baseUrl =
       process.env.NODE_ENV === "production"
-        ? "https://your-production-url.com"
+        ? "https://news-cms.vercel.app"
         : process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
     const order = await prisma.subscriptionOrder.create({
