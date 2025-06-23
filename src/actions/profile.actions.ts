@@ -32,3 +32,61 @@ export async function updateProfile(data: UpdateProfileData) {
   }
 }
 
+export const CancelSubscription = async (hasActiveSubscription: boolean) => {
+  try {
+    const session = await auth()
+    if (!session?.user?.id) {
+      throw new Error("Необходимо авторизоваться")
+    }
+    if (hasActiveSubscription) {
+
+      await prisma.user.update({
+        where: { id: session.user.id },
+        data: {
+          subscriptionActive: false,
+          subscriptionExpires: null,
+        },
+      })
+      revalidatePath("/profile")
+    } else {
+
+    }
+  } catch (error) {
+    console.error("Ошибка отмены подписки:", error)
+    throw new Error("Не удалось отменить подписку")
+  }
+}
+
+export const getUserInfoByOrderId = async (orderId: string) => {
+  try {
+    const session = await auth()
+    if (!session?.user?.id) {
+      throw new Error("Необходимо авторизоваться")
+    }
+    const order = await prisma.subscriptionOrder.findUnique({
+      where: { id: orderId },
+      select: {
+        userId: true,
+      },
+    })
+
+
+    const user = await prisma.user.findUnique({
+      where: { id: order?.userId || "" },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        createdAt: true,
+        role: true,
+        subscriptionActive: true,
+        subscriptionExpires: true,
+      },
+    })
+    return user
+  } catch (error) {
+    console.error("Ошибка получения пользователя по ID заказа:", error)
+    throw new Error("Не удалось получить пользователя по ID заказа")
+  }
+}
+

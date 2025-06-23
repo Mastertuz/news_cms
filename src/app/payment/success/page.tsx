@@ -4,109 +4,75 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle } from "lucide-react";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { YooCheckout } from "@a2seven/yoo-checkout";
-
 import { auth } from "../../../../auth";
+import { getUserInfoByOrderId } from "@/actions/profile.actions";
 
-const checkout = new YooCheckout({
-  shopId: process.env.YUKASSA_SHOP_ID!,
-  secretKey: process.env.YUKASSA_SECRET_KEY!,
-});
-console.log(":", checkout);
 interface PaymentSuccessProps {
   searchParams: Promise<{
     orderId?: string;
   }>;
 }
 
-
 async function PaymentSuccessContent({ orderId }: { orderId?: string }) {
   let order = null;
-  let paymentUpdated = false;
+  let subscriptionExpires: Date | null = null;
 
   if (orderId) {
-    try {
-      order = await prisma.subscriptionOrder.findUnique({
-        where: { id: orderId },
-      });
+    order = await prisma.subscriptionOrder.findUnique({
+      where: { id: orderId },
+    });
 
-      if (order && order.status === "pending") {
-        console.log("Order status is pending, checking payment status...");
-        try {
-          const session = await auth();
-
-          if (session?.user?.id) {
-            await prisma.subscriptionOrder.update({
-              where: { id: orderId },
-              data: { status: "paid" },
-            });
-            order = { ...order, status: "paid" };
-            paymentUpdated = true;
-
-            await prisma.user.update({
-                where: {id:order.userId},
-                data: {
-                  subscriptionActive: true,
-                  subscriptionExpires: new Date(Date.now() + (order.subscriptionType === "monthly" ? 30 * 24 * 60 * 60 * 1000 : 365 * 24 * 60 * 60 * 1000)),
-                },
-            })
-
-            console.log(`Order ${orderId} updated to paid and cart cleared`);
-          }
-        } catch (error) {
-          console.error("Error updating payment status:", error);
-        }
+    if (order && order.status !== "paid") {
+      const session = await auth();
+      if (session?.user?.id) {
+        const expires = new Date(
+          Date.now() +
+            (order.subscriptionType === "monthly"
+              ? 30 * 24 * 60 * 60 * 1000
+              : 365 * 24 * 60 * 60 * 1000)
+        );
+        await prisma.subscriptionOrder.update({
+          where: { id: orderId },
+          data: { status: "paid" },
+        });
+        await prisma.user.update({
+          where: { id: order.userId },
+          data: {
+            subscriptionActive: true,
+            subscriptionExpires: expires,
+          },
+        });
       }
-    } catch (error) {
-      console.error("Error fetching order:", error);
-    }
+    } 
   }
-
+  const userInfo = await getUserInfoByOrderId(orderId!)
+  if (userInfo){
+    subscriptionExpires = userInfo.subscriptionExpires || null;
+  }
   return (
-    <div className="container mx-auto p-4 max-w-2xl">
-      <Card className="text-center">
-        <CardHeader>
-          <div className="flex justify-center mb-4">
-            <CheckCircle className="h-16 w-16 text-green-500" />
-          </div>
-          <CardTitle className="text-2xl text-green-600">
+    <div className="container mx-auto p-4 max-w-md flex items-center justify-center min-h-[80vh]">
+      <Card className="w-full shadow-lg">
+        <CardHeader className="flex flex-col items-center">
+          <CheckCircle className="h-16 w-16 max-[400px]:size-12 text-green-500 mb-2" />
+          <CardTitle className="text-2xl max-[400px]:text-xl text-green-700 mb-1">
             Оплата прошла успешно!
           </CardTitle>
-          {paymentUpdated && (
-            <p className="text-sm text-green-600 mt-2">
-              Статус заказа обновлен, корзина очищена
-            </p>
-          )}
         </CardHeader>
-        <CardContent className="space-y-4">
-          {order ? (
-            <div className="text-left space-y-4">
-              <div className=" p-4 rounded-lg">
-                <p className="text-sm text-white my-2">
-                  Дата: {new Date(order.createdAt).toLocaleDateString("ru-RU")}
-                </p>
-                <p className="text-sm text-white mb-2">
-                  Статус:{" "}
-                  <span className="font-medium">
-                    {order.status === "paid" ? "Оплачен" : order.status}
-                  </span>
-                </p>
-              </div>
+        <CardContent className="flex flex-col items-center gap-4">
+          <p className=" text-center max-[400px]:text-sm">
+            Спасибо за оформление подписки.
+            <br />
+            Ваша подписка активна.
+          </p>
+          {subscriptionExpires && (
+            <div className="bg-green-50 rounded-md px-4 py-2 text-green-800 text-sm font-medium">
+              Подписка действует до:{" "}
+              {new Date(subscriptionExpires).toLocaleDateString("ru-RU")}
             </div>
-          ) : (
-            <p className="text-gray-600">
-              Спасибо за покупку! Ваш заказ успешно оплачен.
-            </p>
           )}
-
-          <div className="flex gap-4 justify-center max-sm:flex-col">
-            <Button asChild>
-              <Link href="/">Продолжить покупки</Link>
-            </Button>
-            <Button variant="outline" asChild>
-              <Link href="/orders">Мои заказы</Link>
-            </Button>
-          </div>
+          <Button asChild className="mt-4 w-full">
+            <Link href="/profile">Перейти в профиль</Link>
+          </Button>
         </CardContent>
       </Card>
     </div>
@@ -118,8 +84,6 @@ export default async function PaymentSuccessPage({
 }: PaymentSuccessProps) {
   const { orderId } = await searchParams;
   return (
-    <Suspense fallback={<div>Загрузка...</div>}>
       <PaymentSuccessContent orderId={orderId} />
-    </Suspense>
   );
 }

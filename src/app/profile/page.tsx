@@ -11,9 +11,6 @@ export default async function ProfilePage() {
   const session = await auth()
   const user = session?.user
   const info = await getUserInfo(user?.id || "")
-  const { name, email, createdAt, role,favorites,id } = info
-  const hasActiveSubscription = info.hasActiveSubscription
-  console.log("User info:", info)
   if (!user) {
     return (
       <div className="container mx-auto py-8 px-4">
@@ -26,7 +23,11 @@ export default async function ProfilePage() {
 
   return (
     <ProfileClient
-      info={{ ...info, name: info.name ?? "" }}
+      info={{ 
+        ...info, 
+        name: info.name ?? "", 
+        subscriptionExpires: info.subscriptionExpires ?? undefined 
+      }}
       user={{
         id: user.id ?? "",
         name: user.name ?? "",

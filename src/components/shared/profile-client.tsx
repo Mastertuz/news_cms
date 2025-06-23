@@ -5,6 +5,7 @@ import {  Bookmark, Calendar, Crown, Mail, Shield, Star, User } from 'lucide-rea
 import { EditProfileDialog } from './edit-profile-form'
 import { Button } from '../ui/button'
 import { Badge } from '../ui/badge'
+import { CancelSubscription } from '@/actions/profile.actions'
 
 interface Props {
     info: {
@@ -14,6 +15,7 @@ interface Props {
         role: string
         hasActiveSubscription: boolean
         favorites?: number
+        subscriptionExpires?: Date
     }
     user: {
         id: string
@@ -22,7 +24,7 @@ interface Props {
     }
 }
 function ProfileClient({info,user}: Props) {
-    const { name, email, createdAt, role, hasActiveSubscription, favorites } = info
+    const { name, email, createdAt, role, hasActiveSubscription, favorites,subscriptionExpires } = info
     const handlePayment = async() =>{
     try{
       const response = await fetch("/api/payment/create", {
@@ -44,6 +46,9 @@ function ProfileClient({info,user}: Props) {
     } catch (error) {
 
     }
+  }
+  const handleCancelSubscription = async (hasActiveSubscription:boolean) => {
+    await CancelSubscription(hasActiveSubscription)
   }
   return (
     <div className="container mx-auto py-8 px-4">
@@ -128,9 +133,11 @@ function ProfileClient({info,user}: Props) {
                         Активна
                       </Badge>
                     </div>
-                    <p className="text-sm text-muted-foreground">Ваша подписка активна до 15 февраля 2025</p>
-                    <Button variant="outline" className="w-full">
-                      Управление подпиской
+                    <p className="text-sm text-muted-foreground">
+                      Ваша подписка активна до {subscriptionExpires ? subscriptionExpires.toLocaleDateString() : ""}
+                    </p>
+                    <Button variant="outline" className="w-full" onClick={() => handleCancelSubscription(hasActiveSubscription)}>
+                      Отключить подписку
                     </Button>
                   </div>
                 ) : (
@@ -142,7 +149,6 @@ function ProfileClient({info,user}: Props) {
                       Оформите подписку, чтобы получить доступ к дополнительным возможностям
                     </p>
                     <Button  className="w-full" onClick={handlePayment}>
-
                         <Crown className="mr-2 h-4 w-4" />
                         Оформить подписку
                     </Button>
