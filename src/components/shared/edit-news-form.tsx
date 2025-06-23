@@ -124,7 +124,7 @@ export function EditNewsDialog({ newsItem, trigger }: EditNewsItemDialogProps) {
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Редактировать новость</DialogTitle>
-          <DialogDescription>Измените необходимые поля и нажмите "Сохранить".</DialogDescription>
+          <DialogDescription>Измените необходимые поля и нажмите Сохранить.</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -134,7 +134,7 @@ export function EditNewsDialog({ newsItem, trigger }: EditNewsItemDialogProps) {
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Заголовок *</FormLabel>
+                  <FormLabel>Заголовок </FormLabel>
                   <FormControl>
                     <Input placeholder="Введите заголовок новости" {...field} />
                   </FormControl>
@@ -148,7 +148,7 @@ export function EditNewsDialog({ newsItem, trigger }: EditNewsItemDialogProps) {
               name="summary"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Содержание *</FormLabel>
+                  <FormLabel>Содержание </FormLabel>
                   <FormControl>
                     <Textarea placeholder="Добавьте текст к новости" {...field} />
                   </FormControl>
@@ -163,7 +163,7 @@ export function EditNewsDialog({ newsItem, trigger }: EditNewsItemDialogProps) {
                 name="author"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Автор *</FormLabel>
+                    <FormLabel>Автор </FormLabel>
                     <FormControl>
                       <Input placeholder="Введите имя автора" {...field} />
                     </FormControl>
@@ -177,7 +177,7 @@ export function EditNewsDialog({ newsItem, trigger }: EditNewsItemDialogProps) {
                 name="category"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Категория *</FormLabel>
+                    <FormLabel>Категория </FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger>
@@ -203,7 +203,7 @@ export function EditNewsDialog({ newsItem, trigger }: EditNewsItemDialogProps) {
               name="source"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Источник *</FormLabel>
+                  <FormLabel>Источник</FormLabel>
                   <FormControl>
                     <Input placeholder="Введите источник" {...field} />
                   </FormControl>
@@ -217,7 +217,7 @@ export function EditNewsDialog({ newsItem, trigger }: EditNewsItemDialogProps) {
               name="sourceUrl"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>URL источника *</FormLabel>
+                  <FormLabel>URL источника </FormLabel>
                   <FormControl>
                     <Input placeholder="https://example.com/article" type="url" {...field} />
                   </FormControl>
@@ -227,7 +227,7 @@ export function EditNewsDialog({ newsItem, trigger }: EditNewsItemDialogProps) {
             />
 
             <div>
-              <FormLabel>Изображение новости *</FormLabel>
+              <FormLabel>Изображение новости </FormLabel>
               {imageUrl ? (
                 <div className="relative mt-2">
                   <img src={imageUrl || "/placeholder.svg"} alt="Uploaded" className="h-40 rounded-md object-cover" />

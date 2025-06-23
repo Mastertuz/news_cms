@@ -32,7 +32,6 @@ export function DeleteNewsButton({
   variant = "outline",
   size = "default",
   className,
-  fullWidth = false,
 }: DeleteNewsButtonProps) {
   const [isDeleting, setIsDeleting] = React.useState(false)
   const router = useRouter()

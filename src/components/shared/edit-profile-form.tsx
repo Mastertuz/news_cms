@@ -47,7 +47,6 @@ export function EditProfileDialog({ user, trigger }: EditProfileDialogProps) {
     },
   })
 
-  // Для программного закрытия Dialog
   const closeRef = useRef<HTMLButtonElement>(null)
 
   const onSubmit = async (data: ProfileFormData) => {
@@ -57,12 +56,12 @@ export function EditProfileDialog({ user, trigger }: EditProfileDialogProps) {
         name: fullName,
       })
       form.reset(data)
-      // Закрыть окно после успешного сохранения
       closeRef.current?.click()
     } catch (error) {
       form.setError("root", {
         message: "Не удалось обновить профиль. Попробуйте еще раз.",
       })
+      throw new Error("Не удалось обновить профиль")
     }
   }
 

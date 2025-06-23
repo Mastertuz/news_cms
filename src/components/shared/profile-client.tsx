@@ -44,7 +44,7 @@ function ProfileClient({info,user}: Props) {
 
       window.location.href = data.confirmationUrl
     } catch (error) {
-
+      throw new Error("Не удалось создать платеж. Попробуйте позже.")
     }
   }
   const handleCancelSubscription = async (hasActiveSubscription:boolean) => {

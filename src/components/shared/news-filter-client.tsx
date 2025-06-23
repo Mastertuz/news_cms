@@ -4,7 +4,7 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Search, Filter, Check, X } from "lucide-react";
+import { Search, Check, X } from "lucide-react";
 import { useCallback } from "react";
 
 import { Button } from "@/components/ui/button";

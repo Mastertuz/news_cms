@@ -39,7 +39,7 @@ function NewsGrid({ news, query, variant = "home", className, isAdmin = false, f
           {query ? (
             <div className="space-y-1">
               <div>
-                Результаты поиска по запросу: <span className="font-medium text-foreground">"{query}"</span>
+                Результаты поиска по запросу: <span className="font-medium text-foreground">{query}</span>
               </div>
               <div>Найдено новостей: {news.length}</div>
             </div>

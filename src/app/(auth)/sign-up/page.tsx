@@ -17,7 +17,7 @@ const Page = async () => {
           className="space-y-4"
           action={async (formData) => {
             "use server";
-            const res = await signUp(formData);
+             await signUp(formData);
             redirect("/sign-in");
           }}
         >
