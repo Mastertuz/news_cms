@@ -94,7 +94,7 @@ export default function AddNewsDialog() {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Добавление новости</DialogTitle>
           <DialogDescription>Заполните информацию о новости и загрузите изображение.</DialogDescription>

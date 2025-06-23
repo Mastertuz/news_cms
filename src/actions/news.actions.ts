@@ -96,7 +96,6 @@ export const getFilteredNews = async (filters: {
 }) => {
   const { categories, authors, keyword } = filters
 
-  // Используем строго типизированный массив условий
   const andConditions: Prisma.NewsWhereInput[] = []
 
   if (categories && categories.length > 0) {
