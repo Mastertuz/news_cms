@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle } from "lucide-react";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { auth } from "../../../../auth";
+import { auth } from "../../../../../auth";
 import { getUserInfoByOrderId } from "@/actions/profile.actions";
 
 interface PaymentSuccessProps {
