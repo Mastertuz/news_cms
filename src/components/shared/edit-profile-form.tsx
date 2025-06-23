@@ -58,10 +58,10 @@ export function EditProfileDialog({ user, trigger }: EditProfileDialogProps) {
       form.reset(data)
       closeRef.current?.click()
     } catch (error) {
+      console.error("Ошибка обновления профиля:", error)
       form.setError("root", {
         message: "Не удалось обновить профиль. Попробуйте еще раз.",
       })
-      throw new Error("Не удалось обновить профиль")
     }
   }
 
@@ -78,7 +78,7 @@ export function EditProfileDialog({ user, trigger }: EditProfileDialogProps) {
       <DialogContent className="sm:max-w-[400px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Редактировать профиль</DialogTitle>
-          <DialogDescription>Измените необходимые поля и нажмите "Сохранить".</DialogDescription>
+          <DialogDescription>Измените необходимые поля и нажмите Сохранить.</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>

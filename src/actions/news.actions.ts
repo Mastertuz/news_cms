@@ -95,7 +95,7 @@ export const getFilteredNews = async (filters: {
 }) => {
   const { categories, authors, keyword } = filters
 
-  const whereConditions: any = {
+  const whereConditions: { AND: any[] } = {
     AND: [],
   }
 
