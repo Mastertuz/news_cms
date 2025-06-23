@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache"
 import type { NewsCreateInput } from "../../types"
 import { prisma } from "@/lib/prisma"
+import { Prisma } from "@prisma/client"
 
 export const createNewsItem = async (newsItemData: NewsCreateInput) => {
   try {
@@ -95,12 +96,11 @@ export const getFilteredNews = async (filters: {
 }) => {
   const { categories, authors, keyword } = filters
 
-  const whereConditions: { AND: any[] } = {
-    AND: [],
-  }
+  // Используем строго типизированный массив условий
+  const andConditions: Prisma.NewsWhereInput[] = []
 
   if (categories && categories.length > 0) {
-    whereConditions.AND.push({
+    andConditions.push({
       category: {
         in: categories,
         mode: "insensitive",
@@ -109,7 +109,7 @@ export const getFilteredNews = async (filters: {
   }
 
   if (authors && authors.length > 0) {
-    whereConditions.AND.push({
+    andConditions.push({
       author: {
         in: authors,
         mode: "insensitive",
@@ -118,7 +118,7 @@ export const getFilteredNews = async (filters: {
   }
 
   if (keyword) {
-    whereConditions.AND.push({
+    andConditions.push({
       OR: [
         {
           title: {
@@ -136,10 +136,8 @@ export const getFilteredNews = async (filters: {
     })
   }
 
-  const finalWhere = whereConditions.AND.length > 0 ? whereConditions : {}
-
   const news = await prisma.news.findMany({
-    where: finalWhere,
+    where: andConditions.length > 0 ? { AND: andConditions } : undefined,
     orderBy: { createdAt: "desc" },
     select: {
       id: true,
