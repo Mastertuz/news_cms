@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma"
 import { schema } from "@/lib/schema"
 import bcrypt from "bcryptjs"
 import { AuthState } from "../../types"
+import { z } from "zod"
 
 
 export const signUp = async (prevState: AuthState, formData: FormData): Promise<AuthState> => {
@@ -40,7 +41,7 @@ export const signUp = async (prevState: AuthState, formData: FormData): Promise<
     }
   } catch (error) {
     if (error instanceof Error && error.name === "ZodError") {
-      const zodError = error as any
+      const zodError = error as z.ZodError
       const firstError = zodError.errors[0]
       return {
         success: false,

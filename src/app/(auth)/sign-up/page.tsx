@@ -14,6 +14,7 @@ import { AlertCircle, CheckCircle } from "lucide-react"
 import { signUp } from "@/actions/user.actions"
 import { schema } from "@/lib/schema"
 import type { AuthState } from "@/../types"
+import { ZodError } from "zod"
 
 const initialState: AuthState = {
   success: false,
@@ -40,9 +41,9 @@ const Page = () => {
     try {
       schema.parse({ email, password })
       return { isValid: true, errors: {} }
-    } catch (error: any) {
-      if (error.errors) {
-        error.errors.forEach((err: any) => {
+    } catch (error) {
+      if (error instanceof ZodError) {
+        error.errors.forEach((err) => {
           if (err.path[0] === "email") {
             errors.email = "Введите корректную электронную почту"
           }
