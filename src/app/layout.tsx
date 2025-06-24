@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "sonner";
+import { Providers } from "./providers";
 
 
 export const metadata: Metadata = {
@@ -19,7 +20,9 @@ export default function RootLayout({
         cz-shortcut-listen="true"
       >
         <main>
+          <Providers>
         {children}
+          </Providers>
         <Toaster/>
         </main>
       </body>

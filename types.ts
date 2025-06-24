@@ -18,3 +18,8 @@ export type NewsCreateInput = {
     source: string,
     category: string,
 };
+export interface AuthState {
+  success: boolean
+  error?: string
+  message?: string
+}

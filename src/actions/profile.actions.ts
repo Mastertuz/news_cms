@@ -61,6 +61,7 @@ export const getUserInfoByOrderId = async (orderId: string) => {
   try {
     const session = await auth()
     if (!session?.user?.id) {
+      revalidatePath('/')
       throw new Error("Необходимо авторизоваться")
     }
     const order = await prisma.subscriptionOrder.findUnique({
