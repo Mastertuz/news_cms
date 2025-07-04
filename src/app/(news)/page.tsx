@@ -44,7 +44,6 @@ export default async function Home({ searchParams }: HomeProps) {
   const user = await getCurrentUser()
   const isAdmin = user?.role === "admin"
   const userId = user?.id
-  if (!user) redirect("/sign-in") 
   return (
     <main className="container mx-auto py-6 px-4">
       <NewsFilterServer searchParams={params} />

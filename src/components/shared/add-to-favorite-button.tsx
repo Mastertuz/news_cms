@@ -24,11 +24,9 @@ export function FavoriteButton({
   className,
   onStatusChange,
 }: FavoriteButtonProps) {
-  // Используем обычное состояние без useTransition
   const [isFavorite, setIsFavorite] = React.useState(initialIsFavorite)
   const [isPending, setIsPending] = React.useState(false)
 
-  // Обновляем состояние, когда меняется initialIsFavorite
   React.useEffect(() => {
     setIsFavorite(initialIsFavorite)
   }, [initialIsFavorite])
@@ -36,10 +34,8 @@ export function FavoriteButton({
   async function toggleFavorite() {
     if (isPending) return
 
-    // Устанавливаем состояние загрузки
     setIsPending(true)
 
-    // Оптимистично обновляем UI
     const newStatus = !isFavorite
     setIsFavorite(newStatus)
     if (onStatusChange) onStatusChange(newStatus)
@@ -57,7 +53,6 @@ export function FavoriteButton({
         })
       }
     } catch (error) {
-      // Возвращаем предыдущее состояние в случае ошибки
       setIsFavorite(!newStatus)
       if (onStatusChange) onStatusChange(!newStatus)
 

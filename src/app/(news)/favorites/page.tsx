@@ -14,7 +14,17 @@ export default async function FavoritesPage() {
   const user = await getCurrentUser()
 
   if (!user) {
-    redirect("/sign-in")
+    return (
+      <div className="container mx-auto py-6 px-4">
+        <div className="flex flex-col items-center justify-center text-center py-12">
+          <h2 className="text-xl font-semibold mb-2">Пожалуйста, войдите в систему</h2>
+          <p className="text-muted-foreground mb-6">Чтобы просматривать избранные новости, вам нужно войти в систему</p>
+          <Button asChild>
+            <Link href="/sign-in">Войти</Link>
+          </Button>
+        </div>
+      </div>
+    )
   }
 
   const favorites = await getUserFavorites()

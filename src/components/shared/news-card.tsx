@@ -42,7 +42,7 @@ export function NewsCard({ newsItem, isAdmin = false, isFavorite = false }: News
           src={imageUrl || "/placeholder.svg?height=200&width=300"}
           alt={title || "Изображение новости"}
           fill
-          className="object-cover group-hover:scale-105 transition-transform duration-200"
+          className="object-cover select-none group-hover:scale-105 transition-transform duration-200"
           priority
           sizes="(max-width: 768px) 100vw, 300px"
         />
