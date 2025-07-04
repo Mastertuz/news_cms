@@ -156,7 +156,7 @@ export function NewsFilterClient({
 
   return (
     <div className="mb-6">
-      <div className="max-h-[80vh] overflow-auto"> {/* Добавлено ограничение по высоте и скролл */}
+      <div className="max-h-[80vh] overflow-auto"> 
         <Card>
           <CardContent className="p-4 md:p-6">
             <Form {...form}>
@@ -200,7 +200,7 @@ export function NewsFilterClient({
                         >
                           Фильтры
                           {hasActiveFilters && (
-                            <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground">
+                            <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-black text-xs text-white">
                               {currentCategories.length + currentAuthors.length}
                             </span>
                           )}
