@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button"
 import { getCurrentUser } from "@/lib/auth"
 import { BookmarkX } from "lucide-react"
 import Link from "next/link"
-import { redirect } from "next/navigation"
 export const metadata = {
   title: "Избранные новости",
   description: "Ваши сохраненные новости",
@@ -50,7 +49,7 @@ export default async function FavoritesPage() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
           {favorites.map((news) => (
-            <NewsCard key={news.id} newsItem={news} />
+            <NewsCard key={news.id} newsItem={news} isFavorite={true}/>
           ))}
         </div>
       )}

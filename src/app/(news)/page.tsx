@@ -3,7 +3,6 @@ import { NewsFilterServer } from "@/components/shared/news-filter-server"
 import Newsgrid from "@/components/shared/news-grid"
 import { getCurrentUser } from "@/lib/auth"
 import { getUserFavorites } from "@/actions/favorites.actions"
-import { redirect } from "next/navigation"
 
 interface HomeProps {
   searchParams: Promise<{
