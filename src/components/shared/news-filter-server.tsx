@@ -10,10 +10,7 @@ interface NewsFilterServerProps {
   }
 }
 
-export async function NewsFilterServer({
-  currentQuery = "",
-  searchParams = {},
-}: NewsFilterServerProps) {
+export async function NewsFilterServer({ currentQuery = "", searchParams = {} }: NewsFilterServerProps) {
   const [categories, authors] = await Promise.all([getAllCategories(), getAllAuthors()])
 
   const currentCategories = searchParams.categories?.split(",").filter(Boolean) || []
